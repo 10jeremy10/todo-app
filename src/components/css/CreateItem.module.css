@@ -1,0 +1,132 @@
+.container {
+  width: 34rem;
+  box-shadow: 0 0.5rem 1rem 1rem #00000020;
+  border-radius: 5px;
+}
+
+.CreateItemContainerDark {
+  padding-inline: 1.2rem;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-radius: 5px;
+  background-color: var(--dark-bg-input);
+  color: var(--dark-clr-txt-primary);
+}
+.CreateItemContainerDark > .btnText::placeholder {
+  color: var(--dark-clr-txt-secondary);
+}
+.createItemContainerLight {
+  padding-inline: 1.2rem;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  border-radius: 5px;
+  background-color: var(--light-bg-input);
+  color: var(--light-clr-txt-primary);
+}
+.createItemContainerLight > .btnText::placeholder {
+  color: var(--light-clr-txt-secondary);
+}
+
+.labelChecked {
+  appearance: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  vertical-align: middle;
+  background: linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%))
+      padding-box,
+    linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%))
+      border-box;
+}
+
+.labelCheckDark {
+  appearance: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-lines);
+  vertical-align: middle;
+}
+.labelCheckLight {
+  appearance: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-lines);
+  vertical-align: middle;
+}
+.labelCheckDark:hover {
+  appearance: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  vertical-align: middle;
+  background: linear-gradient(
+        to right,
+        var(--dark-bg-input),
+        var(--dark-bg-input)
+      )
+      padding-box,
+    linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%))
+      border-box;
+}
+.labelCheckLight:hover {
+  appearance: none;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  vertical-align: middle;
+  background: linear-gradient(
+        to right,
+        var(--light-bg-input),
+        var(--light-bg-input)
+      )
+      padding-box,
+    linear-gradient(to right, hsl(192, 100%, 67%), hsl(280, 87%, 65%))
+      border-box;
+}
+
+.btnCheck {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.labelChecked > img {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.btnText {
+  flex: 1;
+  outline: none;
+  border: none;
+  background-color: inherit;
+  color: inherit;
+}
+.btnText:focus {
+  font-size: 1.1rem;
+}
+.inactiveDark {
+  text-decoration: line-through;
+  color: var(--dark-clr-txt-secondary);
+}
+.inactiveLight {
+  text-decoration: line-through;
+  color: var(--light-clr-txt-secondary);
+}

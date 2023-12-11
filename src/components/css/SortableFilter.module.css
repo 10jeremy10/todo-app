@@ -1,0 +1,108 @@
+.containerDark {
+  padding-inline: 1.2rem;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 0 5px 5px;
+  background-color: var(--dark-bg-input);
+  color: var(--dark-clr-txt-primary);
+}
+.containerDark > p {
+  color: var(--dark-clr-txt-secondary);
+}
+.containerLight {
+  padding-inline: 1.2rem;
+  height: 3.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 0 5px 5px;
+  background-color: var(--light-bg-input);
+  color: var(--light-clr-txt-primary);
+}
+.containerLight > p {
+  color: var(--light-clr-txt-secondary);
+}
+
+.flexboxDark {
+  display: flex;
+  gap: 1rem;
+}
+.flexboxLight {
+  display: flex;
+  gap: 1rem;
+}
+
+@media screen and (min-width: 0px) and (max-width: 750px) {
+  .flexboxDark {
+    margin-top: 11.6rem;
+    padding-inline: 1.2rem;
+    width: 34rem;
+    height: 3.8rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background-color: var(--dark-bg-input);
+    box-shadow: 0 0.5rem 1rem 1rem #00000020;
+  }
+  .flexboxLight {
+    margin-top: 11.6rem;
+    padding-inline: 1.2rem;
+    width: 34rem;
+    height: 3.8rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    background-color: var(--light-bg-input);
+    box-shadow: 0 0.5rem 1rem 1rem #00000020;
+  }
+}
+
+.btnDark[aria-selected="false"] {
+  cursor: pointer;
+  padding-inline: 0;
+  border: none;
+  font-weight: 700;
+  background-color: transparent;
+  color: var(--dark-clr-txt-secondary);
+}
+.btnDark[aria-selected="true"] {
+  cursor: pointer;
+  padding-inline: 0;
+  border: none;
+  font-weight: 700;
+  background-color: transparent;
+  color: var(--txt-accent);
+}
+.btnDark:hover {
+  color: var(--dark-clr-txt-primary);
+}
+
+.btnLight[aria-selected="false"] {
+  cursor: pointer;
+  padding-inline: 0;
+  border: none;
+  font-weight: 700;
+  background-color: transparent;
+  color: var(--light-clr-txt-secondary);
+}
+.btnLight[aria-selected="true"] {
+  cursor: pointer;
+  padding-inline: 0;
+  border: none;
+  font-weight: 700;
+  background-color: transparent;
+  color: var(--txt-accent);
+}
+.btnLight:hover {
+  color: var(--light-clr-txt-primary);
+}
