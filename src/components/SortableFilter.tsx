@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import { ThemeModeContext } from "../context/themeContext";
-import useScreenSize from "../function/useScreenSize";
 import { listItemTypes } from "../types/interface";
 import s from "./css/SortableFilter.module.css";
 
@@ -10,15 +9,12 @@ interface SortableFilterProps {
 }
 
 function SortableFilter({ items, setItems }: SortableFilterProps) {
-  const screenSize = useScreenSize();
   const [selectedFilter, setSelectedFilter] = useState("all");
   const contextValue = useContext(ThemeModeContext);
   if (!contextValue) return null;
   const { themeMode } = contextValue;
 
   const activeItems = items.filter(item => item.active);
-
-  console.log(screenSize.width);
 
   const handleFilter = (filter: string) => {
     setSelectedFilter(filter);

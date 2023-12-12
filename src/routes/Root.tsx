@@ -56,7 +56,7 @@ function Root() {
           <ThemeSwitch />
         </Header>
         <main className="main">
-          <CreateItem />
+          <CreateItem setItems={setItems} />
           <ul className="list">
             <DndContext
               sensors={sensors}
