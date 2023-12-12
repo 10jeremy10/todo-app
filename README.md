@@ -4,7 +4,7 @@ This template provides a minimal setup to get React working in Vite with HMR and
 
 ## Frontend Mentor - Todo app
 
-![Design preview for the Todo app coding challenge](./public/preview-todo-application.png)
+![Design preview for the Todo app coding challenge](./public/design-preview.jpg)
 
 ### Welcome! 👋
 
