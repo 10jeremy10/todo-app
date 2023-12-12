@@ -80,6 +80,9 @@ function Root() {
             </DndContext>
             <SortableFilter items={items} setItems={setItems} />
           </ul>
+          <p className={themeMode ? "bottom-txt-dark" : "bottom-txt-light"}>
+            Drag and drop to reorder list
+          </p>
         </main>
       </div>
     </div>

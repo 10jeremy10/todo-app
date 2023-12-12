@@ -158,3 +158,12 @@ li {
 .list > li:first-child {
   border-radius: 5px 5px 0 0;
 }
+
+.bottom-txt-dark {
+  margin-top: 1rem;
+  color: var(--dark-clr-txt-secondary);
+}
+.bottom-txt-light {
+  margin-top: 1rem;
+  color: var(--light-clr-txt-secondary);
+}
