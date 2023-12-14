@@ -22,6 +22,8 @@ import Header from "../components/Header";
 import ThemeSwitch from "../components/ThemeSwitch";
 import SortableFilter from "../components/SortableFilter";
 
+const apiKey = "http://localhost:3000";
+
 function Root() {
   const contextValue = useContext(ThemeModeContext);
   const [items, setItems] = useState<listItemTypes[]>([]);
@@ -33,7 +35,7 @@ function Root() {
   );
 
   useEffect(() => {
-    fetch("/api/items")
+    fetch(apiKey)
       .then(res => {
         if (!res.ok) {
           throw new Error(`Request failed with status: ${res.status}`);
@@ -42,7 +44,7 @@ function Root() {
         return res.json();
       })
       .then(data => {
-        console.log("Data:", data);
+        console.log(data);
         setItems(data);
       })
       .catch(error => {
