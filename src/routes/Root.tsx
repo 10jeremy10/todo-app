@@ -21,10 +21,11 @@ import { ThemeModeContext } from "../context/themeContext";
 import Header from "../components/Header";
 import ThemeSwitch from "../components/ThemeSwitch";
 import SortableFilter from "../components/SortableFilter";
+import { list } from "../data/list.json";
 
 function Root() {
   const contextValue = useContext(ThemeModeContext);
-  const [items, setItems] = useState<listItemTypes[]>([]);
+  const [items, setItems] = useState<listItemTypes[]>(list);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
