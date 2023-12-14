@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -14,7 +14,6 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { list } from "../data/list.json";
 import { listItemTypes } from "../types/interface";
 import SortableItem from "../components/SortableItem";
 import CreateItem from "../components/CreateItem";
@@ -25,13 +24,31 @@ import SortableFilter from "../components/SortableFilter";
 
 function Root() {
   const contextValue = useContext(ThemeModeContext);
-  const [items, setItems] = useState<listItemTypes[]>(list);
+  const [items, setItems] = useState<listItemTypes[]>([]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  useEffect(() => {
+    fetch("/api/items")
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Request failed with status: ${res.status}`);
+        }
+
+        return res.json();
+      })
+      .then(data => {
+        console.log("Data:", data);
+        setItems(data);
+      })
+      .catch(error => {
+        console.error("Fetch error:", error.message);
+      });
+  }, []);
 
   if (!contextValue) return null;
   const { themeMode } = contextValue;
