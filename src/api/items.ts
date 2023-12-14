@@ -8,7 +8,7 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 } as MongoClientOptions);
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(_: VercelRequest, res: VercelResponse) {
   try {
     await client.connect();
     const database = client.db("todo-application");
