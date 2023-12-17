@@ -40,6 +40,10 @@ function Root() {
           throw new Error(`Request failed with status: ${res.status}`);
         }
 
+        if (!res.headers.get("content-length")) {
+          throw new Error("Empty response");
+        }
+
         return res.json();
       })
       .then(data => {
@@ -57,25 +61,14 @@ function Root() {
     const { active, over } = event;
 
     if (active.id !== over?.id && over) {
-      setItems((prevItems: listItemTypes[]) => {
-        const oldIndex = prevItems.findIndex(
-          item => item._id.valueOf().toString() === active.id.toString()
-        );
-        const newIndex = prevItems.findIndex(
-          item => item._id.valueOf().toString() === over.id.toString()
-        );
+      setItems(items => {
+        const oldIndex = items.findIndex(item => item._id === active.id);
+        const newIndex = items.findIndex(item => item._id === over.id);
 
-        const updatedItems = arrayMove(prevItems, oldIndex, newIndex);
-
-        return updatedItems.map(item => ({
-          ...item,
-          _id: (item._id as string).valueOf().toString(),
-        }));
+        return arrayMove(items, oldIndex, newIndex);
       });
     }
   }
-
-  console.log(items);
 
   return (
     <div id="content" className={themeMode ? "dark" : "light"}>
@@ -92,13 +85,13 @@ function Root() {
               onDragEnd={handleDragEnd}
             >
               <SortableContext
-                items={items}
+                items={items.map(item => item._id)}
                 strategy={verticalListSortingStrategy}
               >
-                {items.map(({ id, _id, note, active }) => (
+                {items.map(({ _id, note, active }, i) => (
                   <SortableItem
-                    key={_id}
-                    id={id}
+                    key={`${_id}-${i}`}
+                    _id={_id}
                     note={note}
                     active={active}
                     setItems={setItems}

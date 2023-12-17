@@ -8,15 +8,9 @@ import { SortableItemProps } from "../types/interface";
 import { ThemeModeContext } from "../context/themeContext";
 import s from "./css/SortableItem.module.css";
 
-function SortableItem({ id, note, active, setItems }: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id });
+function SortableItem({ _id, note, active, setItems }: SortableItemProps) {
+  const { listeners, setNodeRef, setActivatorNodeRef, transform, transition } =
+    useSortable({ id: _id });
 
   const contextValue = useContext(ThemeModeContext);
   if (!contextValue) return null;
@@ -29,16 +23,17 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
 
   const handleIsActive = async () => {
     try {
-      const response = await axios.put(`${API_URL}/update/${id}`, {
+      const response = await axios.put(`${API_URL}/update/${_id.toString()}`, {
         active: !active,
       });
 
-      const updatedItem = response.data;
+      const { active: updatedActive } = response.data;
 
       setItems(items => {
         const updatedItems = items.map(item =>
-          item.id === id ? updatedItem : item
+          item._id === _id ? { ...item, active: updatedActive } : item
         );
+
         return updatedItems;
       });
     } catch (error) {
@@ -47,11 +42,11 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
   };
 
   const handleEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const editedNote = event.target.value;
+    const editedNote = event.target.value || "";
 
     setItems(items => {
       const updatedItems = items.map(item => {
-        if (item.id === id) {
+        if (item._id === _id) {
           return { ...item, note: editedNote };
         }
         return item;
@@ -62,8 +57,8 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${API_URL}/delete/${id}`);
-      setItems(items => items.filter(item => item.id !== id));
+      await axios.delete(`${API_URL}/delete/${_id}`);
+      setItems(items => items.filter(item => item._id !== _id));
     } catch (error) {
       console.error("Error deleting item:", error);
     }
@@ -74,7 +69,6 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
       className={themeMode ? `${s.listItemDark}` : `${s.listItemLight}`}
       ref={setNodeRef}
       style={style}
-      {...attributes}
     >
       <label
         className={
@@ -98,7 +92,7 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
             : `${s.btnText} ${themeMode ? s.inactiveDark : s.inactiveLight}`
         }
         type="text"
-        value={note}
+        value={note || ""}
         onChange={handleEdit}
       />
       <input
