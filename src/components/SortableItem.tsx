@@ -1,4 +1,6 @@
 import { useContext } from "react";
+import axios from "axios";
+import { API_URL } from "../constants";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import iconCheck from "../assets/icon-check.svg";
@@ -25,16 +27,23 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
     transition,
   };
 
-  const handleIsActive = () => {
-    setItems(items => {
-      const updatedItems = items.map(item => {
-        if (item.id === id) {
-          return { ...item, active: !item.active };
-        }
-        return item;
+  const handleIsActive = async () => {
+    try {
+      const response = await axios.put(`${API_URL}/update/${id}`, {
+        active: !active,
       });
-      return updatedItems;
-    });
+
+      const updatedItem = response.data;
+
+      setItems(items => {
+        const updatedItems = items.map(item =>
+          item.id === id ? updatedItem : item
+        );
+        return updatedItems;
+      });
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
   };
 
   const handleEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,8 +60,13 @@ function SortableItem({ id, note, active, setItems }: SortableItemProps) {
     });
   };
 
-  const handleDelete = () => {
-    setItems(items => items.filter(item => item.id !== id));
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`${API_URL}/delete/${id}`);
+      setItems(items => items.filter(item => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
   return (

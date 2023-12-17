@@ -3,10 +3,10 @@ import { UniqueIdentifier } from "@dnd-kit/core";
 
 export interface listItemTypes {
   id: UniqueIdentifier;
+  _id: string;
   note: string;
   active: boolean;
 }
-
 export interface SortableItemProps {
   id: UniqueIdentifier;
   note: string;

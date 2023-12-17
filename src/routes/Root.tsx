@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -21,17 +21,34 @@ import { ThemeModeContext } from "../context/themeContext";
 import Header from "../components/Header";
 import ThemeSwitch from "../components/ThemeSwitch";
 import SortableFilter from "../components/SortableFilter";
-import { list } from "../data/list.json";
+import { API_URL } from "../constants";
 
 function Root() {
   const contextValue = useContext(ThemeModeContext);
-  const [items, setItems] = useState<listItemTypes[]>(list);
+  const [items, setItems] = useState<listItemTypes[]>([]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Request failed with status: ${res.status}`);
+        }
+
+        return res.json();
+      })
+      .then(data => {
+        setItems(data);
+      })
+      .catch(error => {
+        console.error("Fetch error:", error.message);
+      });
+  }, [setItems]);
 
   if (!contextValue) return null;
   const { themeMode } = contextValue;
@@ -40,14 +57,25 @@ function Root() {
     const { active, over } = event;
 
     if (active.id !== over?.id && over) {
-      setItems(items => {
-        const oldIndex = items.findIndex(item => item.id === active.id);
-        const newIndex = items.findIndex(item => item.id === over.id);
+      setItems((prevItems: listItemTypes[]) => {
+        const oldIndex = prevItems.findIndex(
+          item => item._id.valueOf().toString() === active.id.toString()
+        );
+        const newIndex = prevItems.findIndex(
+          item => item._id.valueOf().toString() === over.id.toString()
+        );
 
-        return arrayMove(items, oldIndex, newIndex);
+        const updatedItems = arrayMove(prevItems, oldIndex, newIndex);
+
+        return updatedItems.map(item => ({
+          ...item,
+          _id: (item._id as string).valueOf().toString(),
+        }));
       });
     }
   }
+
+  console.log(items);
 
   return (
     <div id="content" className={themeMode ? "dark" : "light"}>
@@ -67,9 +95,9 @@ function Root() {
                 items={items}
                 strategy={verticalListSortingStrategy}
               >
-                {items.map(({ id, note, active }) => (
+                {items.map(({ id, _id, note, active }) => (
                   <SortableItem
-                    key={id}
+                    key={_id}
                     id={id}
                     note={note}
                     active={active}

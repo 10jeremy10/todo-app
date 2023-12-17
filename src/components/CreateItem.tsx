@@ -1,14 +1,16 @@
 import { useContext, useState } from "react";
+import axios from "axios";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { ThemeModeContext } from "../context/themeContext";
 import { CreateID } from "../function/CreateID";
+import { API_URL } from "../constants";
 import iconCheck from "../assets/icon-check.svg";
 import s from "./css/CreateItem.module.css";
 
 interface CreateItemProps {
   setItems: React.Dispatch<
     React.SetStateAction<
-      { id: UniqueIdentifier; note: string; active: boolean }[]
+      { id: UniqueIdentifier; _id: string; note: string; active: boolean }[]
     >
   >;
 }
@@ -29,17 +31,21 @@ function CreateItem({ setItems }: CreateItemProps) {
     setInputValue(e.target.value);
   };
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     if (inputValue.trim() !== "") {
-      const newItem = {
-        id: CreateID(),
-        note: inputValue,
-        active: !active,
-      };
+      try {
+        const response = await axios.post(`${API_URL}/add`, {
+          id: CreateID(),
+          note: inputValue,
+          active: !active,
+        });
 
-      setItems(prevItems => [...prevItems, newItem]);
-      setInputValue("");
-      console.log(newItem);
+        const newItem = response.data;
+        setItems(prevItems => [...prevItems, newItem]);
+        setInputValue("");
+      } catch (error) {
+        console.error("Error adding item:", error);
+      }
     }
   };
 
