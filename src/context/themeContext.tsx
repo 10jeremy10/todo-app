@@ -21,7 +21,6 @@ function ThemeModeProvider(props: Children) {
 
         const data = await response.json();
         const extractedTheme = data[0].theme;
-        console.log(extractedTheme);
         setThemeMode(extractedTheme);
       } catch (error) {
         console.error("Fetch error:", (error as Error).message);
@@ -45,7 +44,6 @@ function ThemeModeProvider(props: Children) {
       );
 
       const updatedTheme = response.data.theme;
-      console.log(updatedTheme);
       // Update the themeMode state based on the actual result
       setThemeMode(updatedTheme);
     } catch (err) {
