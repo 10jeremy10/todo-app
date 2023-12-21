@@ -4,13 +4,14 @@ export interface listItemTypes {
   _id: string;
   note: string;
   active: boolean;
+  index: number;
 }
 
 export interface SortableItemProps {
   _id: string;
   note: string;
   active: boolean;
-  setItems: React.Dispatch<React.SetStateAction<listItemTypes[]>>;
+  setFilteredItems: React.Dispatch<React.SetStateAction<listItemTypes[]>>;
 }
 
 export interface ThemeModeContextProps {

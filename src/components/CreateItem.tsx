@@ -6,12 +6,14 @@ import iconCheck from "../assets/icon-check.svg";
 import s from "./css/CreateItem.module.css";
 
 interface CreateItemProps {
-  setItems: React.Dispatch<
-    React.SetStateAction<{ _id: string; note: string; active: boolean }[]>
+  setFilteredItems: React.Dispatch<
+    React.SetStateAction<
+      { _id: string; note: string; active: boolean; index: number }[]
+    >
   >;
 }
 
-function CreateItem({ setItems }: CreateItemProps) {
+function CreateItem({ setFilteredItems }: CreateItemProps) {
   const contextValue = useContext(ThemeModeContext);
   const [inputValue, setInputValue] = useState("");
   const [active, setActive] = useState(false);
@@ -36,7 +38,7 @@ function CreateItem({ setItems }: CreateItemProps) {
         });
 
         const newItem = response.data;
-        setItems(prevItems => [...prevItems, newItem]);
+        setFilteredItems(prevItems => [...prevItems, newItem]);
         setInputValue("");
       } catch (error) {
         console.error("Error adding item:", error);

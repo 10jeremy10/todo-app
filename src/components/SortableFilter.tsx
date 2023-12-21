@@ -1,44 +1,57 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
+import axios from "axios";
+import { API_URL } from "../constants";
 import { ThemeModeContext } from "../context/themeContext";
 import { listItemTypes } from "../types/interface";
 import s from "./css/SortableFilter.module.css";
 
 interface SortableFilterProps {
   items: listItemTypes[];
-  setItems: React.Dispatch<React.SetStateAction<listItemTypes[]>>;
+  selectedFilter: string;
+  setSelectedFilter: React.Dispatch<React.SetStateAction<string>>;
+  filteredItems: listItemTypes[];
+  setFilteredItems: React.Dispatch<React.SetStateAction<listItemTypes[]>>;
 }
 
-function SortableFilter({ items, setItems }: SortableFilterProps) {
-  const [selectedFilter, setSelectedFilter] = useState("all");
+function SortableFilter({
+  items,
+  selectedFilter,
+  setSelectedFilter,
+  filteredItems,
+  setFilteredItems,
+}: SortableFilterProps) {
   const contextValue = useContext(ThemeModeContext);
+
   if (!contextValue) return null;
   const { themeMode } = contextValue;
 
-  const activeItems = items.filter(item => item.active);
+  const activeItems = filteredItems.filter(item => item.active);
 
   const handleFilter = (filter: string) => {
     setSelectedFilter(filter);
 
     switch (filter) {
       case "all":
-        setItems(items);
+        setFilteredItems(items);
         break;
       case "active":
-        setItems(items.filter(item => item.active));
+        setFilteredItems(items.filter(item => item.active));
         break;
       case "completed":
-        setItems(items.filter(item => !item.active));
+        setFilteredItems(items.filter(item => !item.active));
         break;
       default:
         break;
     }
   };
 
-  const handleClearCompleted = () => {
-    setItems(items => {
-      const updatedItems = items.filter(item => item.active);
-      return updatedItems;
-    });
+  const handleClearCompleted = async () => {
+    try {
+      await axios.delete(`${API_URL}/clear`);
+      setFilteredItems(items => items.filter(item => item.active));
+    } catch (err) {
+      console.error("Error deleting item:", err);
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { API_URL } from "../constants";
 import { useSortable } from "@dnd-kit/sortable";
@@ -8,10 +8,15 @@ import { SortableItemProps } from "../types/interface";
 import { ThemeModeContext } from "../context/themeContext";
 import s from "./css/SortableItem.module.css";
 
-function SortableItem({ _id, note, active, setItems }: SortableItemProps) {
+function SortableItem({
+  _id,
+  note,
+  active,
+  setFilteredItems,
+}: SortableItemProps) {
   const { listeners, setNodeRef, setActivatorNodeRef, transform, transition } =
     useSortable({ id: _id });
-
+  const [isNoteChanged, setIsNoteChanged] = useState(false);
   const contextValue = useContext(ThemeModeContext);
   if (!contextValue) return null;
   const { themeMode } = contextValue;
@@ -29,38 +34,71 @@ function SortableItem({ _id, note, active, setItems }: SortableItemProps) {
 
       const { active: updatedActive } = response.data;
 
-      setItems(items => {
+      setFilteredItems(items => {
         const updatedItems = items.map(item =>
           item._id === _id ? { ...item, active: updatedActive } : item
         );
 
         return updatedItems;
       });
-    } catch (error) {
-      console.error("Error updating item:", error);
+    } catch (err) {
+      console.error("Error updating item active state:", err);
     }
   };
 
-  const handleEdit = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const editedNote = event.target.value || "";
-
-    setItems(items => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilteredItems(items => {
       const updatedItems = items.map(item => {
         if (item._id === _id) {
-          return { ...item, note: editedNote };
+          return { ...item, note: event.target.value };
         }
         return item;
       });
       return updatedItems;
     });
+
+    // Set isNoteChanged to true when note changes
+    setIsNoteChanged(true);
+  };
+
+  const handleEdit = async (event: React.FocusEvent<HTMLInputElement>) => {
+    try {
+      // Only send the request if the note has changed
+      if (isNoteChanged) {
+        const editedValue = event.target.value;
+        const response = await axios.put(
+          `${API_URL}/updateNote/${_id.toString()}`,
+          {
+            note: editedValue,
+          }
+        );
+
+        const { note: editedNote } = response.data;
+
+        setFilteredItems(items => {
+          const updatedItems = items.map(item => {
+            if (item._id === _id) {
+              return { ...item, note: editedNote };
+            }
+            return item;
+          });
+          return updatedItems;
+        });
+
+        // Reset isNoteChanged after handling edit
+        setIsNoteChanged(false);
+      }
+    } catch (err) {
+      console.error("Error updating item note state:", err);
+    }
   };
 
   const handleDelete = async () => {
     try {
       await axios.delete(`${API_URL}/delete/${_id}`);
-      setItems(items => items.filter(item => item._id !== _id));
-    } catch (error) {
-      console.error("Error deleting item:", error);
+      setFilteredItems(items => items.filter(item => item._id !== _id));
+    } catch (err) {
+      console.error("Error deleting item:", err);
     }
   };
 
@@ -92,8 +130,15 @@ function SortableItem({ _id, note, active, setItems }: SortableItemProps) {
             : `${s.btnText} ${themeMode ? s.inactiveDark : s.inactiveLight}`
         }
         type="text"
-        value={note || ""}
-        onChange={handleEdit}
+        value={note}
+        onChange={handleChange}
+        onBlur={handleEdit}
+        onKeyDown={event => {
+          if (event.key === "Enter") {
+            const inputElement = event.target as HTMLInputElement;
+            inputElement.blur();
+          }
+        }}
       />
       <input
         className={s.btnDrag}
